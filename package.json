@@ -1,27 +1,26 @@
 {
-    "name": "sendmeamail",
-    "version": "0.0.1",
-    "contributors": [
-        {
-            "name": "Brendan Abolivier",
-            "email": "contact@brendanabolivier.com"
-        }
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/babolivier/smam.git"
-    },
-    "scripts": {
-        "start": "node --use_strict server.js"
-    },
-    "dependencies": {
-        "americano": "0.4.5",
-        "nodemailer": "2.4.2",
-        "printit": "0.1.20"
-    },
-    "license": {
-        "type": "GPL-3.0",
-        "url": "https://www.gnu.org/licenses/gpl-3.0-standalone.html"
+  "name": "sendmeamail",
+  "version": "0.0.1",
+  "contributors": [
+    {
+      "name": "Brendan Abolivier",
+      "email": "contact@brendanabolivier.com"
     }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/babolivier/smam.git"
+  },
+  "scripts": {
+    "start": "node --use_strict server.js"
+  },
+  "dependencies": {
+    "express": "4.14.0",
+    "nodemailer": "2.4.2",
+    "printit": "0.1.20"
+  },
+  "license": {
+    "type": "GPL-3.0",
+    "url": "https://www.gnu.org/licenses/gpl-3.0-standalone.html"
+  }
 }
-
