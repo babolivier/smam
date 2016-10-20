@@ -1,11 +1,49 @@
+var items = {
+    name: 'form_name',
+    addr: 'form_addr',
+    subj: 'form_subj',
+    text: 'form_text',
+};
+
+var server  = getServer();
+var xhrSend = new XMLHttpRequest();
+xhrSend.onreadystatechange = function() {
+    if (xhrSend.readyState == XMLHttpRequest.DONE) {
+        console.log(xhrSend);
+    }
+};
+
+
+// Returns the server's base URI based on the user's script tag
+// return: the SMAM server's base URI
+function getServer() {
+    var scripts = document.getElementsByTagName('script');
+    // Parsing all the <script> tags to find the URL to our file
+    for(var i = 0; i < scripts.length; i++) {
+        let script = scripts[i];
+        if(script.src) {
+            let url = script.src;
+            // This should be our script
+            if(url.match(/:[0-9]+\/form\.js$/)) {
+                // Port has been found
+                return url.match(/^(http:\/\/[^\/]+)/)[1];
+            }
+        }
+    }    
+}
+
+
+// Creates a form
+// id: HTML identifier of the document's block to create the form into
+// return: nothing
 function generateForm(id) {
     var el = document.getElementById(id);
     
     var input = {
-        name: getField('form_name', 'Your name', false, 'input'), // TODO: configurable prefix
-        addr: getField('form_addr', 'Your e-mail address', true, 'input'),
-        subj: getField('form_subj', 'Your message\'s subject', false, 'input'),
-        text: getField('form_text', 'Your message', false, 'textarea')
+        name: getField(items.name, 'Your name', false, 'input'), // TODO: configurable prefix
+        addr: getField(items.addr, 'Your e-mail address', true, 'input'),
+        subj: getField(items.subj, 'Your message\'s subject', false, 'input'),
+        text: getField(items.text, 'Your message', false, 'textarea')
     };
     
     // Adding nodes to document
@@ -100,4 +138,25 @@ function getSubmitButton(id, text) {
     submit.appendChild(button);
     
     return submit;
+}
+
+
+// Send form data through the XHR object
+// return: nothing
+function sendForm() {
+    xhrSend.open('POST', server + '/send');
+    xhrSend.setRequestHeader('Content-Type', 'application/json');
+    xhrSend.send(JSON.stringify(getFormData()));
+}
+
+
+// Fetch form inputs from HTML elements
+// return: an object containing all the user's input
+function getFormData() {
+    return {
+        name: document.getElementById(items.name + '_input').value,
+        addr: document.getElementById(items.addr + '_input').value,
+        subj: document.getElementById(items.subj + '_input').value,
+        text: document.getElementById(items.text + '_textarea').value
+    }
 }
