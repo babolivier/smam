@@ -8,6 +8,14 @@ var items = {
 var server  = getServer();
 var xhrSend = new XMLHttpRequest();
 
+var token = "";
+var xhrToken = new XMLHttpRequest();
+xhrToken.onreadystatechange = function() {
+    if(xhrToken.readyState == XMLHttpRequest.DONE) {
+        token = xhrToken.responseText;
+    }
+}
+
 
 // Returns the server's base URI based on the user's script tag
 // return: the SMAM server's base URI
@@ -76,6 +84,10 @@ function generateForm(id) {
             }
         }
     };
+    
+    // Retrieve the token from the server
+    
+    getToken();
 }
 
 
@@ -170,6 +182,9 @@ function sendForm() {
     xhrSend.open('POST', server + '/send');
     xhrSend.setRequestHeader('Content-Type', 'application/json');
     xhrSend.send(JSON.stringify(getFormData()));
+    
+    // Get a new token
+    getToken();
 }
 
 
@@ -180,7 +195,8 @@ function getFormData() {
         name: document.getElementById(items.name + '_input').value,
         addr: document.getElementById(items.addr + '_input').value,
         subj: document.getElementById(items.subj + '_input').value,
-        text: document.getElementById(items.text + '_textarea').value
+        text: document.getElementById(items.text + '_textarea').value,
+        token: token
     }
 }
 
@@ -192,4 +208,12 @@ function cleanForm() {
     document.getElementById(items.addr + '_input').value = '';
     document.getElementById(items.subj + '_input').value = '';
     document.getElementById(items.text + '_textarea').value = '';
+}
+
+
+// Ask the server for a token
+// return: nothing
+function getToken() {
+    xhrToken.open('GET', server + '/register');
+    xhrToken.send();
 }
