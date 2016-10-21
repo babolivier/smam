@@ -7,11 +7,6 @@ var items = {
 
 var server  = getServer();
 var xhrSend = new XMLHttpRequest();
-xhrSend.onreadystatechange = function() {
-    if (xhrSend.readyState == XMLHttpRequest.DONE) {
-        console.log(xhrSend.response);
-    }
-};
 
 
 // Returns the server's base URI based on the user's script tag
@@ -42,6 +37,11 @@ function generateForm(id) {
     // Set the form's behaviour
     el.setAttribute('onsubmit', 'sendForm(); return false;');
     
+    // Add an empty paragraph for status
+    var status = document.createElement('p');
+    status.setAttribute('id', 'form_status');
+    el.appendChild(status);
+    
     var input = {
         name: getField(items.name, 'Your name', false, 'input'), // TODO: configurable prefix
         addr: getField(items.addr, 'Your e-mail address', true, 'input'),
@@ -59,6 +59,23 @@ function generateForm(id) {
     // Adding submit button
     
     el.appendChild(getSubmitButton('form_subm', 'Send the mail'));
+    
+    // Setting the XHR callback
+    
+    xhrSend.onreadystatechange = function() {
+        if(xhrSend.readyState == XMLHttpRequest.DONE) {
+            let status = document.getElementById('form_status');
+            status.setAttribute('class', '');
+            if(xhrSend.status === 200) {
+                cleanForm();
+                status.setAttribute('class', 'success');
+                status.innerHTML = 'Your message has been sent.';
+            } else {
+                status.setAttribute('class', 'failure');
+                status.innerHTML = 'An error happened while sending your message, please retry later.';
+            }
+        }
+    };
 }
 
 
@@ -147,6 +164,11 @@ function getSubmitButton(id, text) {
 // Send form data through the XHR object
 // return: nothing
 function sendForm() {
+    // Clear status
+    let status = document.getElementById('form_status');
+    status.setAttribute('class', 'sending');
+    status.innerHTML = 'Sending the e-mail';
+    
     xhrSend.open('POST', server + '/send');
     xhrSend.setRequestHeader('Content-Type', 'application/json');
     xhrSend.send(JSON.stringify(getFormData()));
@@ -162,4 +184,14 @@ function getFormData() {
         subj: document.getElementById(items.subj + '_input').value,
         text: document.getElementById(items.text + '_textarea').value
     }
+}
+
+
+// Empties the form fields
+// return: nothing
+function cleanForm() {
+    document.getElementById(items.name + '_input').value = '';
+    document.getElementById(items.addr + '_input').value = '';
+    document.getElementById(items.subj + '_input').value = '';
+    document.getElementById(items.text + '_textarea').value = '';
 }

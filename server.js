@@ -14,8 +14,10 @@ var log = printit({
     date: true
 });
 
+
 // nodemailer initial configuration
 var transporter = nodemailer.createTransport(settings.mailserver);
+
 
 // Serve static (JS + HTML) files
 app.use(express.static('front'));
@@ -26,6 +28,12 @@ app.use(bodyParser.json());
 
 // A request on /send with user input = mail to be sent
 app.post('/send', function(req, res, next) {
+    // Count the failures
+    let status = {
+        failed: 0,
+        total: settings.recipients.length
+    };
+    
     // params will be used as:
     // - values for html generation from the pug template
     // - parameters for sending the mail(s)
@@ -50,7 +58,11 @@ app.post('/send', function(req, res, next) {
         logStatus(infos);
     }, function() {
         res.header('Access-Control-Allow-Origin', '*');
-        res.status(200).send();
+        if(status.failed === status.total) {
+            res.status(500).send()
+        } else {
+            res.status(200).send();
+        }
     })
 });
 
@@ -59,7 +71,7 @@ app.post('/send', function(req, res, next) {
 var port = process.env.PORT || 1970;
 // Start the server
 app.listen(port, function() {
-    log.info("Server started on port " + port);
+    log.info('Server started on port ' + port);
 });
 
 
@@ -102,6 +114,7 @@ function logStatus(infos) {
         log.info('Message sent to ' + infos.accepted[0]);
     }
     if(infos.rejected.length !== 0) {
+        status.failed++;
         log.info('Message failed to send to ' + infos.rejected[0]);
     }
 }
