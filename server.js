@@ -14,6 +14,7 @@ var log = printit({
     date: true
 });
 
+// nodemailer initial configuration
 var transporter = nodemailer.createTransport(settings.mailserver);
 
 // Serve static (JS + HTML) files
