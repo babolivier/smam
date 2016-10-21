@@ -1,0 +1,16 @@
+{
+    "mailserver": {
+        "pool": true,
+        "host": "mail.example.tld",
+        "port": 465,
+        "secure": true,
+        "auth": {
+            "user": "noreply@noreply.tld",
+            "pass": "hackme"
+        }
+    },
+    "recipients": [
+        "you@example.tld",
+        "someone.else@example.com"
+    ]
+}

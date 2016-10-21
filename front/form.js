@@ -9,7 +9,7 @@ var server  = getServer();
 var xhrSend = new XMLHttpRequest();
 xhrSend.onreadystatechange = function() {
     if (xhrSend.readyState == XMLHttpRequest.DONE) {
-        console.log(xhrSend);
+        console.log(xhrSend.response);
     }
 };
 
