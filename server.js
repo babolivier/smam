@@ -23,6 +23,7 @@ app.use(express.static('front'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+
 // A request on /send with user input = mail to be sent
 app.post('/send', function(req, res, next) {
     // params will be used as:
