@@ -39,6 +39,9 @@ function getServer() {
 function generateForm(id) {
     var el = document.getElementById(id);
     
+    // Set the form's behaviour
+    el.setAttribute('onsubmit', 'sendForm(); return false;');
+    
     var input = {
         name: getField(items.name, 'Your name', false, 'input'), // TODO: configurable prefix
         addr: getField(items.addr, 'Your e-mail address', true, 'input'),
