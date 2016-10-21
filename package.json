@@ -1,10 +1,11 @@
 {
-  "name": "sendmeamail",
+  "name": "smam",
   "version": "0.0.1",
+  "description": "SMAM (short for Send Me A Mail) is an free (as in freedom) contact form embedding software.",
   "contributors": [
     {
       "name": "Brendan Abolivier",
-      "email": "contact@brendanabolivier.com"
+      "email": "oss@brendanabolivier.com"
     }
   ],
   "repository": {
