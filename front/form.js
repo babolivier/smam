@@ -103,7 +103,7 @@ function getInputField(id, placeholder, email, type) {
     
     if(!type.localeCompare('input')) { // Set input type if input
         if(email) {
-            input.setAttribute('type', 'mail');
+            input.setAttribute('type', 'email');
         } else {
             input.setAttribute('type', 'text');
         }
