@@ -40,7 +40,7 @@ app.post('/send', function(req, res, next) {
     // text entered by the user
     params.html = pug.renderFile('template.pug', params);
     
-    log.info('Sending message from ' + content.from);
+    log.info('Sending message from ' + params.from);
     
     // Send the email to all users
     sendMails(params, function(err, infos) {
@@ -76,16 +76,16 @@ app.listen(port, function() {
 function sendMails(params, update, done) {
     let mails = settings.recipients.map((recipient) => {
         // Promise for each recipient to send each mail asynchronously
-        return new Promise((sent) => {            
+        return new Promise((sent) => {
             params.to = recipient;
             // Send the email
             transporter.sendMail(params, (err, infos) => {
+                if(err) {
+                    return update(err, recipient);
+                }
+                update(null, infos);
                 // Promise callback
                 sent();
-                if(err) {
-                    return next(err, recipient);
-                }
-                next(null, infos);
             });
         });
     });
@@ -98,10 +98,10 @@ function sendMails(params, update, done) {
 // infos: infos provided by nodemailer
 // return: nothing
 function logStatus(infos) {
-    if(infos.accepted.length) {
-        log.info('Message sent to ' + status.accepted[0]);
+    if(infos.accepted.length !== 0) {
+        log.info('Message sent to ' + infos.accepted[0]);
     }
-    if(infos.rejected.length) {
-        log.info('Message failed to send to ' + status.rejected[0]);
+    if(infos.rejected.length !== 0) {
+        log.info('Message failed to send to ' + infos.rejected[0]);
     }
 }
