@@ -150,8 +150,6 @@ function getSubmitButton(id, text) {
     
     button.setAttribute('type', 'submit');
     button.setAttribute('id', id);
-    // Disable button's default action
-    button.setAttribute('onSubmit', 'return false;');
     
     button.innerHTML = text;
     
