@@ -74,10 +74,12 @@ app.listen(port, function() {
 // done(): Called once each mail has been sent
 function sendMails(params, update, done) {
     let mails = settings.recipients.map((recipient) => {
+        // Promise for each recipient to send each mail asynchronously
         return new Promise((sent) => {            
             params.to = recipient;
-            
+            // Send the email
             transporter.sendMail(params, (err, infos) => {
+                // Promise callback
                 sent();
                 if(err) {
                     return next(err, recipient);
@@ -86,6 +88,7 @@ function sendMails(params, update, done) {
             });
         });
     });
+    // Run all the promises (= send all the mails)
     Promise.all(mails).then(done);
 }
 
