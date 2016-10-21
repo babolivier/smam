@@ -73,6 +73,11 @@ The `mailserver` section is the set of parameters which will be passed to nodema
 
 The `recipients` server is an array containing the e-mail addresses any message sent via the form will be sent to. Just write down the form's recipient(s)'s addresse(s).
 
+## Templating
+
+Each e-mail sent by the form follows a template described in `template.pug` (it's [Pug](pugjs.org/)). If you want to change the way the e-mails you receive are displayed in your mailbox, just edit it! You don't even need to restart the server aftewards :smile:
+
+
 ## Contribute
 
 If you like this project and want to help, there's many way to do it.
