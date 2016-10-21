@@ -1,4 +1,3 @@
-"use strict"
 var pug         = require('pug');
 var nodemailer  = require('nodemailer');
 var settings    = require('./settings');
