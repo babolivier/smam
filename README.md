@@ -77,6 +77,39 @@ The `recipients` server is an array containing the e-mail addresses any message 
 
 Each e-mail sent by the form follows a template described in `template.pug` (it's [Pug](pugjs.org/)). If you want to change the way the e-mails you receive are displayed in your mailbox, just edit it! You don't even need to restart the server aftewards :smile:
 
+## Personnalising
+
+As you might have already seen, the contact form is generated without any form of style except your browser's default one. But that doesn't meen that you have to add an ugly form to your site to receive contact e-mails, as every element has a specific id (beginning with the `form_` prefix), allowing you to use your own style on your contact form.
+
+The generated form will look like this:
+
+```html
+<p id="form_status"></p>
+<div id="form_name">
+    <label for="form_name_input">Your name</label>
+    <input required="required" placeholder="Your name" id="form_name_input" type="text">
+</div>
+<div id="form_addr">
+    <label for="form_addr_input">Your e-mail address</label>
+    <input required="required" placeholder="Your e-mail address" id="form_addr_input" type="email">
+</div>
+<div id="form_subj">
+    <label for="form_subj_input">Your message's subject</label>
+    <input required="required" placeholder="Your message's subject" id="form_subj_input" type="text">
+</div>
+<div id="form_text">
+    <label for="form_text_textarea">Your message</label>
+    <textarea required="required" placeholder="Your message" id="form_text_textarea"></textarea>
+</div>
+<div id="form_subm">
+    <button type="submit" id="form_subm">Send the mail</button>
+</div>
+```
+
+Now it's all yours to make good use of all these identifiers and have a magnificient contact form :wink:
+
+I think that the code in itself is clear enough, if not please tell me so I can detail everything here!
+
 
 ## Contribute
 
