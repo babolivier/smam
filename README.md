@@ -2,7 +2,7 @@
 
 Always wanted to implement a contact form in your website and/or portfolio, but don't want to busy yourself with something too complex (mail sending in PHP, for example, is a complete mess)? Here's a miracle solution for ya! Just run the nodemailer-based app, include a JavaScript file in your HTML page, and you're all set :wink:
 
-## Install
+## Install and run
 
 Just clone this repository, edit the `settings.json` file (described below) and run the server:
 
@@ -17,6 +17,18 @@ The default port will be set to `1970`, but you can set the one you want by usin
 
 ```bash
 PORT=8080 npm start
+```
+
+Same goes with the host. Without further instructions, the server will listen on 0.0.0.0, which means it will accept every connection, whatever the source. You can override this by using the `HOST` environment variable:
+
+```bash
+HOST=127.0.0.1 npm start
+```
+
+So, if we want our server to only listen to requests from its host, on the 8080 port, we'll start the server like this:
+
+```bash
+HOST=127.0.0.1 PORT=8080 npm start
 ```
 
 Obviously, you'll need Node.js and NPM (or any Node.js package manager) to run the app. As we're launching a webserver (which will serve the necessary files and process the mail sending requests), this app will run continuously. One good practice would be to run it as a daemon (in a systemd service, for example).

@@ -105,9 +105,11 @@ app.post('/send', function(req, res, next) {
 
 // Use either the default port or the one chosen by the user (PORT env variable)
 var port = process.env.PORT || 1970;
+// Same for the host (using the HOST env variable)
+var host = process.env.HOST || '0.0.0.0';
 // Start the server
-app.listen(port, function() {
-    log.info('Server started on port ' + port);
+app.listen(port, host, function() {
+    log.info('Server started on ' + host + ':' + port);
 });
 
 
