@@ -19,7 +19,7 @@ The default port will be set to `1970`, but you can set the one you want by usin
 PORT=8080 npm start
 ```
 
-Same goes with the host. Without further instructions, the server will listen on 0.0.0.0, which means it will accept every connection, whatever the source. You can override this by using the `HOST` environment variable:
+Same goes with the host. Without further instructions, the server will listen on `0.0.0.0`, which means it will accept every connection, whatever the source. You can override this by using the `HOST` environment variable:
 
 ```bash
 HOST=127.0.0.1 npm start
