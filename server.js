@@ -31,6 +31,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
+// Allow cross-origin requests. Wildcard for now, we'll see if we can improve
+// that.
+app.all('/*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
+
 // A request on /register generates a token and store it, along the user's
 // address, on the tokens object
 app.get('/register', function(req, res, next) {
