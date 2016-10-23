@@ -77,13 +77,16 @@ First, you must rename the `settings.example.conf` into `settings.conf`, and edi
     "recipients": [
         "you@example.tld",
         "someone.else@example.com"
-    ]
+    ],
+    "formOrigin": "https://example.tld"
 }
 ```
 
 The `mailserver` section is the set of parameters which will be passed to nodemailer's transporter initialisation, describing the output mail server and following the same structure as the `option` object in [nodemailer's SMTP configuration section](https://github.com/nodemailer/nodemailer#set-up-smtp). Please head there to have the full list of parameters.
 
 The `recipients` server is an array containing the e-mail addresses any message sent via the form will be sent to. Just write down the form's recipient(s)'s addresse(s).
+
+Finally, the `formOrigin` part is a string containing the origin of the page you'll include the contact form into. This allows SMAM to work with the [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) security most browser use. For more info on how to fill this field, and what is an origin, please give a look at [the MDN's definition](https://developer.mozilla.org/en-US/docs/Glossary/origin).
 
 ## Templating
 
