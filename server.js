@@ -39,11 +39,6 @@ app.use(cors(corsOptions));
 
 app.options('*', cors(corsOptions));
 
-app.all('*', function(req, res, next) {
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
-    next();
-});
-
 
 // A request on /register generates a token and store it, along the user's
 // address, on the tokens object
@@ -69,6 +64,9 @@ app.get('/register', function(req, res, next) {
 
 // A request on /send with user input = mail to be sent
 app.post('/send', function(req, res, next) {
+    // Response will be JSON
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    
     if(!checkBody(req.body)) {
         return res.status(400).send();
     }
