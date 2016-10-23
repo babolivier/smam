@@ -5,6 +5,7 @@ var settings    = require('./settings');
 
 // Web server
 var bodyParser  = require('body-parser');
+var cors        = require('cors');
 var express     = require('express');
 var app = express();
 
@@ -29,11 +30,13 @@ app.use(express.static('front'));
 // Body parsing
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-
 // Allow cross-origin requests.
+app.use(cors({
+  origin: settings.formUrl,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}));
+
 app.all('/*', function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', settings.formUrl);
     res.header('Access-Control-Allow-Headers', 'Content-Type')
     next();
 });
