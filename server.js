@@ -32,11 +32,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Allow cross-origin requests.
 var corsOptions = {
-  origin: settings.formUrl,
+  origin: settings.formOrigin,
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
-
+// Taking care of preflight requests
 app.options('*', cors(corsOptions));
 
 

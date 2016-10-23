@@ -13,5 +13,5 @@
         "you@example.tld",
         "someone.else@example.com"
     ],
-    "formUrl": "https://example.tld/contact"
+    "formOrigin": "https://example.tld"
 }
