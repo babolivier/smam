@@ -31,10 +31,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-// Allow cross-origin requests. Wildcard for now, we'll see if we can improve
-// that.
+// Allow cross-origin requests.
 app.all('/*', function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', settings.formUrl);
     res.header('Access-Control-Allow-Headers', 'Content-Type')
     next();
 });
