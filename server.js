@@ -31,12 +31,15 @@ app.use(express.static('front'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Allow cross-origin requests.
-app.use(cors({
+var corsOptions = {
   origin: settings.formUrl,
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}));
+};
+app.use(cors(corsOptions));
 
-app.all('/*', function(req, res, next) {
+app.options('*', cors(corsOptions));
+
+app.all('*', function(req, res, next) {
     res.header('Access-Control-Allow-Headers', 'Content-Type')
     next();
 });
