@@ -85,7 +85,7 @@ app.post('/send', function(req, res, next) {
     // - parameters for sending the mail(s)
     let params = {
         subject: req.body.subj,
-        from: req.body.name + '<' + settings.mailserver.user + '>',
+        from: req.body.name + '<' + settings.mailserver.auth.user + '>',
         replyTo: req.body.name + ' <' + req.body.addr + '>',
         html: req.body.text
     };
@@ -95,7 +95,7 @@ app.post('/send', function(req, res, next) {
     // text entered by the user
     params.html = pug.renderFile('template.pug', params);
     
-    log.info('Sending message from ' + params.from);
+    log.info('Sending message from ' + params.replyTo);
     
     // Send the email to all users
     sendMails(params, function(err, infos) {
