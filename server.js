@@ -147,12 +147,12 @@ function sendMails(params, update, done) {
             params.to = recipient;
             // Send the email
             transporter.sendMail(params, (err, infos) => {
+                sent();
                 if(err) {
                     return update(err, recipient);
                 }
                 update(null, infos);
                 // Promise callback
-                sent();
             });
         });
     });
