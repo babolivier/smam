@@ -5,6 +5,7 @@ var settings    = require('./settings');
 
 // Web server
 var bodyParser  = require('body-parser');
+var cors        = require('cors');
 var express     = require('express');
 var app = express();
 
@@ -29,15 +30,14 @@ app.use(express.static('front'));
 // Body parsing
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-
-// Allow cross-origin requests. Wildcard for now, we'll see if we can improve
-// that.
-app.all('/*', function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
-    next();
-});
+// Allow cross-origin requests.
+var corsOptions = {
+  origin: settings.formOrigin,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
+// Taking care of preflight requests
+app.options('*', cors(corsOptions));
 
 
 // A request on /register generates a token and store it, along the user's
@@ -64,6 +64,9 @@ app.get('/register', function(req, res, next) {
 
 // A request on /send with user input = mail to be sent
 app.post('/send', function(req, res, next) {
+    // Response will be JSON
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    
     if(!checkBody(req.body)) {
         return res.status(400).send();
     }
