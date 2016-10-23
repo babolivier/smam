@@ -85,7 +85,7 @@ app.post('/send', function(req, res, next) {
     // - parameters for sending the mail(s)
     let params = {
         subject: req.body.subj,
-        from: req.body.name + '<' + settings.mailserver.user + '>'
+        from: req.body.name + '<' + settings.mailserver.user + '>',
         replyTo: req.body.name + ' <' + req.body.addr + '>',
         html: req.body.text
     };
