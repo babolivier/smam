@@ -120,7 +120,7 @@ The generated form will look like this:
     <textarea required="required" placeholder="Your message" id="form_text_textarea"></textarea>
 </div>
 <div id="form_subm">
-    <button type="submit" id="form_subm">Send the mail</button>
+    <button type="submit" id="form_subm_btn">Send the mail</button>
 </div>
 ```
 

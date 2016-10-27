@@ -175,7 +175,7 @@ function getSubmitButton(id, text) {
     var button = document.createElement('button');
     
     button.setAttribute('type', 'submit');
-    button.setAttribute('id', id);
+    button.setAttribute('id', id + '_btn');
     
     button.innerHTML = text;
     
