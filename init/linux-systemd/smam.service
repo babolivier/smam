@@ -1,0 +1,19 @@
+[Unit]
+Description=SMAM (Send Me A Mail) contact form embedding
+Documentation=https://github.com/babolivier/smam
+; Edit this with your favorite web server
+After=caddy.service
+Requires=caddy.service
+
+[Service]
+Restart=on-failure
+; Use a specific user
+User=smam
+Group=smam
+; Working directory
+WorkingDirectory=/etc/smam
+; Start with NPM
+ExecStart=/usr/bin/npm start
+
+[Install]
+WantedBy=multi-user.target
