@@ -1,0 +1,17 @@
+[Unit]
+Description=SMAM (Send Me A Mail) contact form embedding
+Documentation=https://github.com/babolivier/smam
+; Edit this with your favorite web server
+After=caddy.service
+Requires=caddy.service
+
+[Service]
+Restart=on-failure
+; User smam's home directory is the directory where SMAM's server.js is found
+User=smam
+Group=smam
+; Start with NPM
+ExecStart=npm start
+
+[Install]
+WantedBy=multi-user.target
