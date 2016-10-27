@@ -3,6 +3,10 @@ var nodemailer  = require('nodemailer');
 var crypto      = require('crypto');
 var settings    = require('./settings');
 
+// Translation
+var locale  = require('./locales/' + settings.language);
+var lang    = locale.server;
+
 // Web server
 var bodyParser  = require('body-parser');
 var cors        = require('cors');
@@ -98,7 +102,7 @@ app.post('/send', function(req, res, next) {
     // text entered by the user
     params.html = pug.renderFile('template.pug', params);
     
-    log.info('Sending message from ' + params.replyTo);
+    log.info(lang.log_sending, params.replyTo);
     
     // Send the email to all users
     sendMails(params, function(err, infos) {
@@ -116,13 +120,22 @@ app.post('/send', function(req, res, next) {
 });
 
 
+// A request on /lang sends translated strings (according to the locale set in
+// the app settings)
+app.get('/lang', function(req, res, next) {
+    // Response will be JSON
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.status(200).send(locale.client);
+});
+
+
 // Use either the default port or the one chosen by the user (PORT env variable)
 var port = process.env.PORT || 1970;
 // Same for the host (using the HOST env variable)
 var host = process.env.HOST || '0.0.0.0';
 // Start the server
 app.listen(port, host, function() {
-    log.info('Server started on ' + host + ':' + port);
+    log.info(lang.log_server_start, host + ':' + port);
 });
 
 
@@ -166,11 +179,11 @@ function sendMails(params, update, done) {
 // return: nothing
 function logStatus(infos) {
     if(infos.accepted.length !== 0) {
-        log.info('Message sent to ' + infos.accepted[0]);
+        log.info(lang.log_send_success, infos.accepted[0]);
     }
     if(infos.rejected.length !== 0) {
         status.failed++;
-        log.info('Message failed to send to ' + infos.rejected[0]);
+        log.info(lang.log_send_failure, infos.rejected[0]);
     }
 }
 
@@ -199,7 +212,7 @@ function checkToken(ip, token) {
     }
     
     if(!verified) {
-        log.warn(ip + ' just tried to send a message with an invalid token');
+        log.warn(ip, lang.log_invalid_token);
     }
     
     return verified;
@@ -239,5 +252,5 @@ function cleanTokens() {
         }
     }
     
-    log.info('Cleared expired tokens');
+    log.info(lang.log_cleared_token);
 }

@@ -6,15 +6,43 @@ var items = {
 };
 
 var server  = getServer();
-var xhrSend = new XMLHttpRequest();
-
 var token = "";
-var xhrToken = new XMLHttpRequest();
-xhrToken.onreadystatechange = function() {
-    if(xhrToken.readyState == XMLHttpRequest.DONE) {
-        token = xhrToken.responseText;
-    }
+var lang = {};
+
+var xhr = {
+    lang: new XMLHttpRequest(),
+    token: new XMLHttpRequest(),
+    send: new XMLHttpRequest()
 }
+
+// XHR callbacks
+
+xhr.token.onreadystatechange = function() {
+    if(xhr.token.readyState == XMLHttpRequest.DONE) {
+        token = xhr.token.responseText;
+    }
+};
+
+xhr.lang.onreadystatechange = function() {
+    if(xhr.lang.readyState == XMLHttpRequest.DONE) {
+        lang = JSON.parse(xhr.lang.responseText);
+    }
+};
+
+xhr.send.onreadystatechange = function() {
+    if(xhr.send.readyState == XMLHttpRequest.DONE) {
+        let status = document.getElementById('form_status');
+        status.setAttribute('class', '');
+        if(xhr.send.status === 200) {
+            cleanForm();
+            status.setAttribute('class', 'success');
+            status.innerHTML = lang.send_status_success;
+        } else {
+            status.setAttribute('class', 'failure');
+            status.innerHTML = lang.send_status_failure;
+        }
+    }
+};
 
 
 // Returns the server's base URI based on the user's script tag
@@ -40,6 +68,9 @@ function getServer() {
 // id: HTML identifier of the document's block to create the form into
 // return: nothing
 function generateForm(id) {
+    // Get translated strings
+    getLangSync();
+    
     var el = document.getElementById(id);
     
     // Set the form's behaviour
@@ -51,10 +82,10 @@ function generateForm(id) {
     el.appendChild(status);
     
     var input = {
-        name: getField(items.name, 'Your name', false, 'input'), // TODO: configurable prefix
-        addr: getField(items.addr, 'Your e-mail address', true, 'input'),
-        subj: getField(items.subj, 'Your message\'s subject', false, 'input'),
-        text: getField(items.text, 'Your message', false, 'textarea')
+        name: getField(items.name, lang.form_name_label, false, 'input'),
+        addr: getField(items.addr, lang.form_addr_label, true, 'input'),
+        subj: getField(items.subj, lang.form_subj_label, false, 'input'),
+        text: getField(items.text, lang.form_mesg_label, false, 'textarea')
     };
     
     // Adding nodes to document
@@ -66,24 +97,7 @@ function generateForm(id) {
     
     // Adding submit button
     
-    el.appendChild(getSubmitButton('form_subm', 'Send the mail'));
-    
-    // Setting the XHR callback
-    
-    xhrSend.onreadystatechange = function() {
-        if(xhrSend.readyState == XMLHttpRequest.DONE) {
-            let status = document.getElementById('form_status');
-            status.setAttribute('class', '');
-            if(xhrSend.status === 200) {
-                cleanForm();
-                status.setAttribute('class', 'success');
-                status.innerHTML = 'Your message has been sent.';
-            } else {
-                status.setAttribute('class', 'failure');
-                status.innerHTML = 'An error happened while sending your message, please retry later.';
-            }
-        }
-    };
+    el.appendChild(getSubmitButton('form_subm', lang.form_subm_label));
     
     // Retrieve the token from the server
     
@@ -177,11 +191,11 @@ function sendForm() {
     // Clear status
     let status = document.getElementById('form_status');
     status.setAttribute('class', 'sending');
-    status.innerHTML = 'Sending the e-mail';
+    status.innerHTML = lang.send_status_progress;
     
-    xhrSend.open('POST', server + '/send');
-    xhrSend.setRequestHeader('Content-Type', 'application/json');
-    xhrSend.send(JSON.stringify(getFormData()));
+    xhr.send.open('POST', server + '/send');
+    xhr.send.setRequestHeader('Content-Type', 'application/json');
+    xhr.send.send(JSON.stringify(getFormData()));
     
     // Get a new token
     getToken();
@@ -211,9 +225,17 @@ function cleanForm() {
 }
 
 
-// Ask the server for a token
+// Asks the server for a token
 // return: nothing
 function getToken() {
-    xhrToken.open('GET', server + '/register');
-    xhrToken.send();
+    xhr.token.open('GET', server + '/register');
+    xhr.token.send();
+}
+
+
+// Asks the server for translated strings to display
+// return: notghing
+function getLangSync() {
+    xhr.lang.open('GET', server + '/lang', false);
+    xhr.lang.send();
 }
