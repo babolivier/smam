@@ -127,7 +127,7 @@ app.get('/lang', function(req, res, next) {
     // Response will be JSON
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-    // Preventing un-updated settings file
+    // Preventing un-updated settings files
     let labels = true;
     if(settings.labels !== undefined) {
         labels = settings.labels;
