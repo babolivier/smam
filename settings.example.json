@@ -14,5 +14,6 @@
         "someone.else@example.com"
     ],
     "formOrigin": "https://example.tld",
-    "language": "en"
+    "language": "en",
+    "labels": true
 }

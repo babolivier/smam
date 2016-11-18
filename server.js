@@ -121,11 +121,23 @@ app.post('/send', function(req, res, next) {
 
 
 // A request on /lang sends translated strings (according to the locale set in
-// the app settings)
+// the app settings), alongside the boolean for the display of labels in the
+// form block.
 app.get('/lang', function(req, res, next) {
     // Response will be JSON
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-    res.status(200).send(locale.client);
+
+    // Preventing un-updated settings file
+    let labels = true;
+    if(settings.labels !== undefined) {
+        labels = settings.labels;
+    }
+    
+    // Send the infos
+    res.status(200).send({
+        'labels': labels,
+        'translations': locale.client
+    });
 });
 
 
