@@ -6,8 +6,9 @@ var items = {
 };
 
 var server  = getServer();
-var token = "";
-var lang = {};
+var token   = "";
+var labels  = true;
+var lang    = {};
 
 var xhr = {
     lang: new XMLHttpRequest(),
@@ -25,7 +26,9 @@ xhr.token.onreadystatechange = function() {
 
 xhr.lang.onreadystatechange = function() {
     if(xhr.lang.readyState == XMLHttpRequest.DONE) {
-        lang = JSON.parse(xhr.lang.responseText);
+        let response = JSON.parse(xhr.lang.responseText);
+        lang = response.translations;
+        labels = response.labels;
     }
 };
 
@@ -115,7 +118,9 @@ function getField(id, placeholder, email, type) {
     var field = document.createElement('div');
     
     field.setAttribute('id', id); // TODO: configurable prefix
-    field.appendChild(getLabel(id, placeholder, type));
+    if(labels) {
+        field.appendChild(getLabel(id, placeholder, type));
+    }
     field.appendChild(getInputField(id, placeholder, email, type));
     
     return field;

@@ -79,7 +79,8 @@ First, you must rename the `settings.example.conf` into `settings.conf`, and edi
         "someone.else@example.com"
     ],
     "formOrigin": "https://example.tld",
-    "language": "en"
+    "language": "en",
+    "labels": true
 }
 ```
 
@@ -89,7 +90,9 @@ The `recipients` section is an array containing the e-mail addresses any message
 
 The `formOrigin` part is a string containing the origin of the page you'll include the contact form into. This allows SMAM to work with the [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) security most browser use. For more info on how to fill this field, and what is an origin, please give a look at [the MDN's definition](https://developer.mozilla.org/en-US/docs/Glossary/origin).
 
-Finally, the `language` string tells SMAM in which language you want your form served. Possible values are all the files in `locales/`'s names (without the `.json`). To create your own translation, please read the section below.
+The `language` string tells SMAM in which language you want your form served. Possible values are all the files in `locales/`'s names (without the `.json`). To create your own translation, please read the section below.
+
+Finally, the `labels` setting is a boolean to set whether or not labels will be displayed in the `<form></form>` block. If set to `false`, the form will still display the front-end strings ("Your name", "Your e-mail address"...), but only as placeholders in the text fields. If set to true, the said strings will appear as text fields' placeholders but also as labels outside of the fields. If not set, defaults to `true`.
 
 ## Templating
 
