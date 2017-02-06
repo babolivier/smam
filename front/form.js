@@ -105,7 +105,8 @@ function generateForm(id) {
     var status = document.createElement('p');
     status.setAttribute('id', 'form_status');
     el.appendChild(status);
-    
+
+    // Default fields
     DOMFields = {
         name: getField({
             name: items.name,
@@ -130,35 +131,36 @@ function generateForm(id) {
     };
     
     // Adding custom fields
-    
     for(let fieldName in customFields) {
         let field = customFields[fieldName];
         DOMFields[fieldName] = getField(field, NOT_REQUIRED);
     }
     
-    // Adding nodes to document
-
+    // Adding all nodes to document
     for(let field in DOMFields) {
         el.appendChild(DOMFields[field]);
     }
 
     // Adding submit button
-    
     el.appendChild(getSubmitButton('form_subm', lang.form_subm_label));
     
     // Retrieve the token from the server
-    
     getToken();
 }
 
 
+// Get the HTML element for a given field
+// fieldInfos: object describing the field
+// required: boolean on whether the field is required or optional
+// return: a block containing the field and a label describing it (if enabled)
 function getField(fieldInfos, required) {
     var block = document.createElement('div');
-    
     block.setAttribute('id', fieldInfos.name);
-    
+
+    // Declare the variable first
     let field = {};
-    
+
+    // Easily add new supported input types
     switch(fieldInfos.type) {
         case 'text':        field = getTextField(fieldInfos, required);
                             break;
@@ -170,12 +172,14 @@ function getField(fieldInfos, required) {
                             break;
     }
 
+    // We need the input field's ID to bind it to the label, so we generate the
+    // field first
     if(labels) {
         block.appendChild(getLabel(fieldInfos.label, field.id));
     }
-
-    block.appendChild(field);
     
+    // Assemble the block and return it
+    block.appendChild(field);
     return block;
 }
 
@@ -194,9 +198,14 @@ function getLabel(content, id) {
 }
 
 
+// Returns a <select> HTML element
+// fieldInfos: object describing the field
+// required: boolean on whether the field is required or optional
+// return: a <select> element corresponding to the info passed as input
 function getSelectField(fieldInfos, required) {
     let field = document.createElement('select');
 
+    // Set attributes when necessary
     if(required) {
         field.setAttribute('required', 'required');
     }
@@ -207,9 +216,12 @@ function getSelectField(fieldInfos, required) {
     // Add all options to select
     for(let choice of fieldInfos.options) {
         let option = document.createElement('option');
+        // Options' values are incremental numeric indexes
         option.setAttribute('value', index);
+        // Set the value defined by the user
         option.innerHTML = choice;
         field.appendChild(option);
+        // Increment the index
         index++;
     }
 
@@ -217,16 +229,29 @@ function getSelectField(fieldInfos, required) {
 }
 
 
+// Returns a <input> HTML element with 'text' type
+// fieldInfos: object describing the field
+// required: boolean on whether the field is required or optional
+// return: a <input> HTML element corresponding to the info passed as input
 function getTextField(fieldInfos, required) {
     return getBaseInputField(fieldInfos, required, 'text');
 }
 
 
+// Returns a <input> HTML element with 'email' type
+// fieldInfos: object describing the field
+// required: boolean on whether the field is required or optional
+// return: a <input> HTML element corresponding to the info passed as input
 function getEmailField(fieldInfos, required) {
     return getBaseInputField(fieldInfos, required, 'email');
 }
 
 
+// Returns a basic <input> HTML element with generic info to be processed by
+// functions at higher level
+// fieldInfos: object describing the field
+// required: boolean on whether the field is required or optional
+// return: a basic <input> HTML element with generic info
 function getBaseInputField(fieldInfos, required, type) {
     let field = getBaseField(fieldInfos, required, 'input')
     field.setAttribute('type', type);
@@ -234,11 +259,21 @@ function getBaseInputField(fieldInfos, required, type) {
 }
 
 
+// Returns a <textarea> HTML element
+// fieldInfos: object describing the field
+// required: boolean on whether the field is required or optional
+// return: a <textarea> element corresponding to the info passed as input
 function getTextarea(fieldInfos, required) {
     return getBaseField(fieldInfos, required, 'textarea');
 }
 
 
+// Returns a base HTML element with generic info to be processed by functions at 
+// higher level
+// fieldInfos: object describing the field
+// required: boolean on whether the field is required or optional
+// tag: the HTML tag the field element must have
+// return: a HTML element of the given tag with basic info given as input
 function getBaseField(fieldInfos, required, tag) {
     let field = document.createElement(tag);
     

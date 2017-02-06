@@ -77,6 +77,7 @@ app.post('/send', function(req, res, next) {
     
     let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     
+    // Token verification
     if(!checkToken(ip, req.body.token)) {
         return res.status(403).send();
     }
@@ -97,6 +98,7 @@ app.post('/send', function(req, res, next) {
         html: req.body.text
     };
 
+    // Process custom fields to get data we can use in the HTML generation
     params.custom = processCustom(req.body.custom);
     
     // Replacing the mail's content with HTML from the pug template
@@ -283,18 +285,29 @@ function cleanTokens() {
 }
 
 
+// Process custom fields to something usable in the HTML generation
+// For example, this function replaces indexes with answers in select fields
+// custom: object describing data from custom fields
+// return: an object with user-input data from each field:
+// {
+//      field name: {
+//          value: String,
+//          label: String
+//      }
+// }
 function processCustom(custom) {
     let fields = {};
-    
+
+    // Process each field
     for(let field in custom) {
         let type = settings.customFields[field].type;
-
+        // Match indexes with data when needed
         switch(type) {
             case 'select':  custom[field] = settings.customFields[field]
                                             .options[custom[field]];
                             break;
         }
-
+        // Insert data into the finale object
         fields[field] = {
             value: custom[field],
             label: settings.customFields[field].label
