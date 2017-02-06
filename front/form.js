@@ -333,16 +333,16 @@ function getFormData() {
 	data.token = token;
 	data.custom = {};
 
-	// Custom fields
 	// Select the field
 	let index = 0;
-
 	if(labels) {
 		index = 1;
 	}
-	
+
+	// Iterate over all the fields
 	for(let field in DOMFields) {
 		let el = DOMFields[field].children[index];
+		// Do we need to push this field into default or custom fields?
 		if(field in customFields) {
 			data.custom[field] = el.value;
 		} else {
