@@ -5,7 +5,7 @@ var settings	= require('./settings');
 
 // Translation
 var locale		= require('./locales/' + settings.language);
-var language	= locale.server;
+var lang		= locale.server;
 
 // Web server
 var bodyParser	= require('body-parser');
