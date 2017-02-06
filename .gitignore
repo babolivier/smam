@@ -39,6 +39,9 @@ jspm_packages
 # Credentials
 settings.json
 
+# Template
+template.pug
+
 # Test files
 test*.js
 
