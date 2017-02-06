@@ -150,8 +150,8 @@ app.get('/fields', function(req, res, next) {
 	// Response will be JSON
 	res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-	// Send an array anyway, its length will determine if we need to display any
-	let customFields = settings.customFields || [];
+	// Send an object anyway, its size will determine if we need to display any
+	let customFields = settings.customFields || {};
 	
 	// Send custom fields data
 	res.status(200).send(customFields);
