@@ -1,22 +1,42 @@
+// Consts for readability
+const REQUIRED      = true;
+const NOT_REQUIRED  = false;
+
+
+var prefix = 'form'
+
 var items = {
-    name: 'form_name',
-    addr: 'form_addr',
-    subj: 'form_subj',
-    text: 'form_text',
+    name: 'name',
+    addr: 'addr',
+    subj: 'subj',
+    text: 'text',
 };
 
-var server  = getServer();
-var token   = "";
-var labels  = true;
-var lang    = {};
+var DOMFields = {};
+
+var server  		= getServer();
+var token   		= "";
+var labels  		= true;
+var lang    		= [];
+var customFields 	= {};
 
 var xhr = {
+	customFields: new XMLHttpRequest(),
     lang: new XMLHttpRequest(),
     token: new XMLHttpRequest(),
     send: new XMLHttpRequest()
 }
 
 // XHR callbacks
+
+xhr.customFields.onreadystatechange = function() {
+	if(xhr.customFields.readyState == XMLHttpRequest.DONE) {
+        customFields = JSON.parse(xhr.customFields.responseText);
+        for(let field in customFields) {
+            customFields[field].name = field;
+        }
+	}
+};
 
 xhr.token.onreadystatechange = function() {
     if(xhr.token.readyState == XMLHttpRequest.DONE) {
@@ -73,6 +93,8 @@ function getServer() {
 function generateForm(id) {
     // Get translated strings
     getLangSync();
+	// Get custom fields if defined in the configuration
+	getCustomFieldsSync();
     
     var el = document.getElementById(id);
     
@@ -84,20 +106,42 @@ function generateForm(id) {
     status.setAttribute('id', 'form_status');
     el.appendChild(status);
     
-    var input = {
-        name: getField(items.name, lang.form_name_label, false, 'input'),
-        addr: getField(items.addr, lang.form_addr_label, true, 'input'),
-        subj: getField(items.subj, lang.form_subj_label, false, 'input'),
-        text: getField(items.text, lang.form_mesg_label, false, 'textarea')
+    DOMFields = {
+        name: getField({
+            name: items.name,
+            label: lang.form_name_label,
+            type: 'text'
+        }, REQUIRED),
+        addr: getField({
+            name: items.addr,
+            label: lang.form_addr_label,
+            type: 'email'
+        }, REQUIRED),
+        subj: getField({
+            name: items.subj,
+            label: lang.form_subj_label,
+            type: 'text'
+        }, REQUIRED),
+        text: getField({
+            name: items.text,
+            label: lang.form_mesg_label,
+            type: 'textarea'
+        }, REQUIRED)
     };
     
+    // Adding custom fields
+    
+    for(let fieldName in customFields) {
+        let field = customFields[fieldName];
+        DOMFields[fieldName] = getField(field, NOT_REQUIRED);
+    }
+    
     // Adding nodes to document
-    
-    el.appendChild(input.name);
-    el.appendChild(input.addr);
-    el.appendChild(input.subj);
-    el.appendChild(input.text);
-    
+
+    for(let field in DOMFields) {
+        el.appendChild(DOMFields[field]);
+    }
+
     // Adding submit button
     
     el.appendChild(getSubmitButton('form_subm', lang.form_subm_label));
@@ -108,63 +152,103 @@ function generateForm(id) {
 }
 
 
-// Returns a form field
-// id: field HTML identifier
-// placeholder: placeholder text
-// email: boolean: is it an email field?
-// type: 'input' or 'textarea'
-// return: a div node containing a label and an input text field
-function getField(id, placeholder, email, type) {
-    var field = document.createElement('div');
+function getField(fieldInfos, required) {
+    var block = document.createElement('div');
     
-    field.setAttribute('id', id); // TODO: configurable prefix
-    if(labels) {
-        field.appendChild(getLabel(id, placeholder, type));
+    block.setAttribute('id', fieldInfos.name);
+    
+    let field = {};
+    
+    switch(fieldInfos.type) {
+        case 'text':        field = getTextField(fieldInfos, required);
+                            break;
+        case 'textarea':    field = getTextarea(fieldInfos, required);
+                            break;
+        case 'email':       field = getEmailField(fieldInfos, required);
+                            break;
+        case 'select':      field = getSelectField(fieldInfos, required);
+                            break;
     }
-    field.appendChild(getInputField(id, placeholder, email, type));
+
+    if(labels) {
+        block.appendChild(getLabel(fieldInfos.label, field.id));
+    }
+
+    block.appendChild(field);
     
-    return field;
+    return block;
 }
 
 
 // Returns a label
-// id: field HTML identifier
 // content: label's inner content
-// type: 'input' or 'textarea'
+// id: field HTML identifier
 // return: a label node the field's description
-function getLabel(id, content, type) {
+function getLabel(content, id) {
     var label = document.createElement('label');
     
-    label.setAttribute('for', id + '_' + type);
+    label.setAttribute('for', id);
     label.innerHTML = content;
     
     return label;
 }
 
 
-// Returns an input text field
-// id: field HTML identifier
-// placeholder: placeholder text, field description
-// email: boolean: is it an email field?
-// type: 'input' or 'textarea'
-// return: an input text or email field (depending on "email"'s value') with an
-//         HTML id and a placeholder text
-function getInputField(id, placeholder, email, type) {
-    var input = document.createElement(type);
-    
-    if(!type.localeCompare('input')) { // Set input type if input
-        if(email) {
-            input.setAttribute('type', 'email');
-        } else {
-            input.setAttribute('type', 'text');
-        }
+function getSelectField(fieldInfos, required) {
+    let field = document.createElement('select');
+
+    if(required) {
+        field.setAttribute('required', 'required');
     }
+    field.setAttribute('id', prefix + '_' + fieldInfos.name + '_select');
+
+    let index = 0;
     
-    input.setAttribute('required', 'required');
-    input.setAttribute('placeholder', placeholder);
-    input.setAttribute('id', id + '_' + type);
+    // Add all options to select
+    for(let choice of fieldInfos.options) {
+        let option = document.createElement('option');
+        option.setAttribute('value', index);
+        option.innerHTML = choice;
+        field.appendChild(option);
+        index++;
+    }
+
+    return field
+}
+
+
+function getTextField(fieldInfos, required) {
+    return getBaseInputField(fieldInfos, required, 'text');
+}
+
+
+function getEmailField(fieldInfos, required) {
+    return getBaseInputField(fieldInfos, required, 'email');
+}
+
+
+function getBaseInputField(fieldInfos, required, type) {
+    let field = getBaseField(fieldInfos, required, 'input')
+    field.setAttribute('type', type);
+    return field;
+}
+
+
+function getTextarea(fieldInfos, required) {
+    return getBaseField(fieldInfos, required, 'textarea');
+}
+
+
+function getBaseField(fieldInfos, required, tag) {
+    let field = document.createElement(tag);
     
-    return input;
+    if(required) {
+        field.setAttribute('required', 'required');
+    }
+    field.setAttribute('placeholder', fieldInfos.label);
+    field.setAttribute('id', prefix + '_' + fieldInfos.name + '_' + tag);
+    
+    return field;
 }
 
 
@@ -210,23 +294,38 @@ function sendForm() {
 // Fetch form inputs from HTML elements
 // return: an object containing all the user's input
 function getFormData() {
-    return {
-        name: document.getElementById(items.name + '_input').value,
-        addr: document.getElementById(items.addr + '_input').value,
-        subj: document.getElementById(items.subj + '_input').value,
-        text: document.getElementById(items.text + '_textarea').value,
-        token: token
+    let data = {};
+    data.token = token;
+    data.custom = {};
+
+    // Custom fields
+    // Select the field
+    let index = 0;
+
+    if(labels) {
+        index = 1;
     }
+    
+    for(let field in DOMFields) {
+        let el = DOMFields[field].children[index];
+        if(field in customFields) {
+            data.custom[field] = el.value;
+        } else {
+            data[field] = el.value;
+        }
+    }
+
+    return data;
 }
 
 
 // Empties the form fields
 // return: nothing
 function cleanForm() {
-    document.getElementById(items.name + '_input').value = '';
-    document.getElementById(items.addr + '_input').value = '';
-    document.getElementById(items.subj + '_input').value = '';
-    document.getElementById(items.text + '_textarea').value = '';
+    document.getElementById(prefix + '_' + items.name + '_input').value = '';
+    document.getElementById(prefix + '_' + items.addr + '_input').value = '';
+    document.getElementById(prefix + '_' + items.subj + '_input').value = '';
+    document.getElementById(prefix + '_' + items.text + '_textarea').value = '';
 }
 
 
@@ -243,4 +342,13 @@ function getToken() {
 function getLangSync() {
     xhr.lang.open('GET', server + '/lang', false);
     xhr.lang.send();
+}
+
+
+// Asks the server for the custom fields if there's one or more set in the
+// configuration file
+// return: nothing
+function getCustomFieldsSync() {
+	xhr.customFields.open('GET', server + '/fields', false);
+	xhr.customFields.send();
 }

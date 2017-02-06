@@ -96,6 +96,8 @@ app.post('/send', function(req, res, next) {
         replyTo: req.body.name + ' <' + req.body.addr + '>',
         html: req.body.text
     };
+
+    params.custom = processCustom(req.body.custom);
     
     // Replacing the mail's content with HTML from the pug template
     // Commenting the line below will bypass the generation and only user the
@@ -138,6 +140,19 @@ app.get('/lang', function(req, res, next) {
         'labels': labels,
         'translations': locale.client
     });
+});
+
+
+// A request on /fields sends data on custom fields.
+app.get('/fields', function(req, res, next) {
+	// Response will be JSON
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+	// Send an array anyway, its length will determine if we need to display any
+	let customFields = settings.customFields || [];
+	
+	// Send custom fields data
+	res.status(200).send(customFields);
 });
 
 
@@ -265,4 +280,26 @@ function cleanTokens() {
     }
     
     log.info(lang.log_cleared_token);
+}
+
+
+function processCustom(custom) {
+    let fields = {};
+    
+    for(let field in custom) {
+        let type = settings.customFields[field].type;
+
+        switch(type) {
+            case 'select':  custom[field] = settings.customFields[field]
+                                            .options[custom[field]];
+                            break;
+        }
+
+        fields[field] = {
+            value: custom[field],
+            label: settings.customFields[field].label
+        }
+    }
+    
+    return fields;
 }
