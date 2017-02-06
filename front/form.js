@@ -357,10 +357,23 @@ function getFormData() {
 // Empties the form fields
 // return: nothing
 function cleanForm() {
-	document.getElementById(prefix + '_' + items.name + '_input').value = '';
-	document.getElementById(prefix + '_' + items.addr + '_input').value = '';
-	document.getElementById(prefix + '_' + items.subj + '_input').value = '';
-	document.getElementById(prefix + '_' + items.text + '_textarea').value = '';
+	// Select the field
+	let index = 0;
+	if(labels) {
+		index = 1;
+	}
+
+	// Iterate over all the fields
+	for(let field in DOMFields) {
+		let el = DOMFields[field].children[index];
+		// If it's a <select> element, select the first element so it looks
+		// like a reset
+		if(!el.tagName.toLowerCase().localeCompare('select')) {
+			el.children[0].selected = true;
+		} else {
+			el.value = '';
+		}
+	}
 }
 
 
