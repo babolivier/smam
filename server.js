@@ -252,17 +252,33 @@ function checkToken(ip, token) {
 // body: body taken from express's request object
 // return: true if the body is valid, false else
 function checkBody(body) {
-	let valid = false;
-	
-	if(body.token !== undefined && body.subj !== undefined 
-		&& body.name !== undefined && body.addr !== undefined 
-		&& body.text !== undefined) {
-		valid = true;
+	// Check default fields
+	if(isInvalid(body.token) || isInvalid(body.subj) || isInvalid(body.name) 
+		|| isInvalid(body.addr) || isInvalid(body.text)) {
+		return false;
 	}
-	
-	return valid;
+
+	// Checking required custom fields
+	for(let field in settings.customFields) {
+		// No need to check the field if its not required in the settings
+		if(settings.customFields[field].required) {
+			if(isInvalid(body.custom[field])) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
+
+// Checks if the field is invalid. A field is considered as invalid if undefined
+// or is an empty string
+// field: user-input value of the field
+// return: true if the field is valid, false if not
+function isInvalid(field) {
+	return (field === undefined || field.length == 0);
+}
 
 // Checks the tokens object to see if no token has expired
 // return: nothing
@@ -307,10 +323,13 @@ function processCustom(custom) {
 											.options[custom[field]];
 							break;
 		}
-		// Insert data into the finale object
-		fields[field] = {
-			value: custom[field],
-			label: settings.customFields[field].label
+
+		// Insert data into the final object if the value is set
+		if(!isInvalid(custom[field])) {
+			fields[field] = {
+				value: custom[field],
+				label: settings.customFields[field].label
+			}
 		}
 	}
 	

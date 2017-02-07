@@ -5,6 +5,7 @@
         "form_subj_label": "Your message's subject",
         "form_mesg_label": "Your message",
         "form_subm_label": "Send the mail",
+		"form_select_header_option": "Select an answer",
         "send_status_success": "Your message has been sent.",
         "send_status_failure": "An error happened while sending your message, please retry later.",
         "send_status_progress": "Sending the e-mail"
