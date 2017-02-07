@@ -1,20 +1,21 @@
 {
-    "client": {
-        "form_name_label": "Votre nom",
-        "form_addr_label": "Votre adresse e-mail",
-        "form_subj_label": "Sujet de votre message",
-        "form_mesg_label": "Votre message",
-        "form_subm_label": "Envoyer",
-        "send_status_success": "Votre message a été envoyé.",
-        "send_status_failure": "Une erreur est survenue lors de l'envoi du message, merci de réessayer plus tard.",
-        "send_status_progress": "Envoi du message en cours"
-    },
-    "server": {
-        "log_server_start": "Serveur démarré pour",
-        "log_sending": "Envoi d'un message de",
-        "log_send_success": "Message envoyé à",
-        "log_send_failure": "Erreur lors de l'envoi du message à",
-        "log_invalid_token": "vient d'essayer d'envoyer un message avec un jeton invalide",
-        "log_cleared_token": "Les jetons expirés ont été effacés"
-    }
+	"client": {
+		"form_name_label": "Votre nom",
+		"form_addr_label": "Votre adresse e-mail",
+		"form_subj_label": "Sujet de votre message",
+		"form_mesg_label": "Votre message",
+		"form_subm_label": "Envoyer",
+		"form_select_header_option": "Sélectionnez une réponse",
+		"send_status_success": "Votre message a été envoyé.",
+		"send_status_failure": "Une erreur est survenue lors de l'envoi du message, merci de réessayer plus tard.",
+		"send_status_progress": "Envoi du message en cours"
+	},
+	"server": {
+		"log_server_start": "Serveur démarré pour",
+		"log_sending": "Envoi d'un message de",
+		"log_send_success": "Message envoyé à",
+		"log_send_failure": "Erreur lors de l'envoi du message à",
+		"log_invalid_token": "vient d'essayer d'envoyer un message avec un jeton invalide",
+		"log_cleared_token": "Les jetons expirés ont été effacés"
+	}
 }

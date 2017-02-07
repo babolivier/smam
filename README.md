@@ -39,9 +39,9 @@ First, include the script in your HTML page's header:
 
 ```html
 <head>
-    ...
-    <script src="http://www.example.tld:1970/form.js" charset="utf-8"></script>
-    ...
+	...
+	<script src="http://www.example.tld:1970/form.js" charset="utf-8"></script>
+	...
 </head>
 ```
 
@@ -49,12 +49,12 @@ Then, add an empty `<form>` tag to your page's body. It **must** have an ID. Now
 
 ```html
 <body>
-    ...
-    <form id="smam"></form>
-    <script type="text/javascript">
-        generateForm('smam');
-    </script>
-    ...
+	...
+	<form id="smam"></form>
+	<script type="text/javascript">
+		generateForm('smam');
+	</script>
+	...
 </body>
 ```
 
@@ -64,23 +64,45 @@ First, you must rename the `settings.example.conf` into `settings.conf`, and edi
 
 ```json
 {
-    "mailserver": {
-        "pool": true,
-        "host": "mail.example.tld",
-        "port": 465,
-        "secure": true,
-        "auth": {
-            "user": "noreply@noreply.tld",
-            "pass": "hackme"
-        }
-    },
-    "recipients": [
-        "you@example.tld",
-        "someone.else@example.com"
-    ],
-    "formOrigin": "https://example.tld",
-    "language": "en",
-    "labels": true
+	"mailserver": {
+		"pool": true,
+		"host": "mail.example.tld",
+		"port": 465,
+		"secure": true,
+		"auth": {
+			"user": "noreply@noreply.tld",
+			"pass": "hackme"
+		}
+	},
+	"recipients": [
+		"you@example.tld",
+		"someone.else@example.com"
+	],
+	"formOrigin": "https://example.tld",
+	"language": "en",
+	"labels": true,
+	"customFields": {
+		"deadline": {
+			"label": "Development deadline",
+			"type": "select",
+			"options": [
+				"A week",
+				"A month",
+				"More than a month"
+			],
+			"required": true
+		},
+		"domain": {
+			"label": "Website domain",
+			"type": "text",
+			"required": false
+		},
+		"budget_max": {
+			"label": "Maximum budget (€)",
+			"type": "number",
+			"required": true
+		}
+	}
 }
 ```
 
@@ -94,9 +116,45 @@ The `language` string tells SMAM in which language you want your form served. Po
 
 Finally, the `labels` setting is a boolean to set whether or not labels will be displayed in the `<form></form>` block. If set to `false`, the form will still display the front-end strings ("Your name", "Your e-mail address"...), but only as placeholders in the text fields. If set to true, the said strings will appear as text fields' placeholders but also as labels outside of the fields. If not set, defaults to `true`.
 
+The `customFields` section is optional and describes custom form fields, which are described below.
+
+## Custom fields
+
+SMAM allows you to add custom fields to your form (in addition to the default ones, which are the sender's name, the sender's e-mail address, the message's subject and the message's content). These fields will be added in your form below the content's field, in a tag defined by the settings file (one of &lt;input&gt;, &lt;select&gt; and &lt;textarea&gt;). We'll see below how to set the field's type.
+
+A custom field is defined in the `customFields` section of your settings file, as described below:
+
+```json
+"field_name": {
+	"label": "My field",
+	"type": "select",
+	"required": true,
+	"options": [
+		"Option 1",
+		"Option 2",
+		"Option 3"
+	]
+}
+```
+
+* **field_name** (required) is an identifier for your field, it will only be used internally by the software.
+* **label** (required) is both the label/placeholder displayed with your field in the form and the label displayed next to the user-input value in the final e-mail.
+* **type** (required) is the type of your field. If you set it to "select", the form field will use a &lt;select&gt; tag (this will require the `options` parameters being set). "textarea" will set the field to use the &lt;textarea&gt; tag. If any other value is set here, it will be placed in the `type` attribute of an &lt;input&gt; tag. Head over [here](https://developer.mozilla.org/fr/docs/Web/HTML/Element/Input#attr-type) for a full list of accepted input types. Please not that the `checkbox` and `radio` types aren't currently supported (but will be in the future). There's no support planned for the `submit` and `reset` types.
+* **required** (optional) is a boolean. Set it to true and the field will be set as required in your form. A modern browser should prevent an user to send the form if a required field isn't filled. On top of that, SMAM's server will check the field marked as required to make sure they've been filled.
+* **options** (optional) is an array of possible values. This is currently useful only if your field is of the "select" type.
+
 ## Templating
 
 Each e-mail sent by the form follows a template described in `template.pug` (it's [Pug](pugjs.org/)). If you want to change the way the e-mails you receive are displayed in your mailbox, just edit it! You don't even need to restart the server aftewards :smile:
+
+The template also features custom fields, iterating over the `custom` object, containing the field's label and user-input value:
+
+```json
+"field_name": {
+	"label": "My field",
+	"value": "Hello"
+}
+```
 
 ## Personnalising
 
@@ -107,25 +165,44 @@ The generated form will look like this:
 ```html
 <p id="form_status"></p>
 <div id="form_name">
-    <label for="form_name_input">Your name</label>
-    <input required="required" placeholder="Your name" id="form_name_input" type="text">
+	<label for="form_name_input">Your name</label>
+	<input required="required" placeholder="Your name" id="form_name_input" type="text">
 </div>
 <div id="form_addr">
-    <label for="form_addr_input">Your e-mail address</label>
-    <input required="required" placeholder="Your e-mail address" id="form_addr_input" type="email">
+	<label for="form_addr_input">Your e-mail address</label>
+	<input required="required" placeholder="Your e-mail address" id="form_addr_input" type="email">
 </div>
 <div id="form_subj">
-    <label for="form_subj_input">Your message's subject</label>
-    <input required="required" placeholder="Your message's subject" id="form_subj_input" type="text">
+	<label for="form_subj_input">Your message's subject</label>
+	<input required="required" placeholder="Your message's subject" id="form_subj_input" type="text">
 </div>
 <div id="form_text">
-    <label for="form_text_textarea">Your message</label>
-    <textarea required="required" placeholder="Your message" id="form_text_textarea"></textarea>
+	<label for="form_text_textarea">Your message</label>
+	<textarea required="required" placeholder="Your message" id="form_text_textarea"></textarea>
 </div>
 <div id="form_subm">
-    <button type="submit" id="form_subm_btn">Send the mail</button>
+	<button type="submit" id="form_subm_btn">Send the mail</button>
 </div>
 ```
+
+Custom fields will be formatted the same way (and with identifiers following the same guidelines) as default fields. For example, a custom field described as
+
+```json
+"budget": {
+	"label": "Maximum budget allowed",
+	"type": "number",
+	"required": true
+}
+```
+in the settings file will result in
+```html
+<div id="form_budget">
+	<label for="form_budget_input">Maximum budget allowed</label>
+	<input required="required" placeholder="Maximum budget allowed" id="form_budget_input" type="number">
+</div>
+```
+
+Please note that the field's identifier ends with the field's tag name and not its type. For example, our `budget` field above will see its identifier become `form_budget_select` if it has the "select" type, `form_budget_textarea` if it has the "textarea" type, or `form_budget_input` for any other "type" value.
 
 Now it's all yours to make good use of all these identifiers and have a magnificient contact form :wink:
 
