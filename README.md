@@ -39,9 +39,9 @@ First, include the script in your HTML page's header:
 
 ```html
 <head>
-    ...
-    <script src="http://www.example.tld:1970/form.js" charset="utf-8"></script>
-    ...
+	...
+	<script src="http://www.example.tld:1970/form.js" charset="utf-8"></script>
+	...
 </head>
 ```
 
@@ -49,12 +49,12 @@ Then, add an empty `<form>` tag to your page's body. It **must** have an ID. Now
 
 ```html
 <body>
-    ...
-    <form id="smam"></form>
-    <script type="text/javascript">
-        generateForm('smam');
-    </script>
-    ...
+	...
+	<form id="smam"></form>
+	<script type="text/javascript">
+		generateForm('smam');
+	</script>
+	...
 </body>
 ```
 
@@ -64,23 +64,23 @@ First, you must rename the `settings.example.conf` into `settings.conf`, and edi
 
 ```json
 {
-    "mailserver": {
-        "pool": true,
-        "host": "mail.example.tld",
-        "port": 465,
-        "secure": true,
-        "auth": {
-            "user": "noreply@noreply.tld",
-            "pass": "hackme"
-        }
-    },
-    "recipients": [
-        "you@example.tld",
-        "someone.else@example.com"
-    ],
-    "formOrigin": "https://example.tld",
-    "language": "en",
-    "labels": true,
+	"mailserver": {
+		"pool": true,
+		"host": "mail.example.tld",
+		"port": 465,
+		"secure": true,
+		"auth": {
+			"user": "noreply@noreply.tld",
+			"pass": "hackme"
+		}
+	},
+	"recipients": [
+		"you@example.tld",
+		"someone.else@example.com"
+	],
+	"formOrigin": "https://example.tld",
+	"language": "en",
+	"labels": true,
 	"customFields": {
 		"deadline": {
 			"label": "Development deadline",
@@ -93,10 +93,10 @@ First, you must rename the `settings.example.conf` into `settings.conf`, and edi
 			"required": true
 		},
 		"domain": {
-            "label": "Website domain",
-            "type": "text",
+			"label": "Website domain",
+			"type": "text",
 			"required": false
-        },
+		},
 		"budget_max": {
 			"label": "Maximum budget (€)",
 			"type": "number",
@@ -165,23 +165,23 @@ The generated form will look like this:
 ```html
 <p id="form_status"></p>
 <div id="form_name">
-    <label for="form_name_input">Your name</label>
-    <input required="required" placeholder="Your name" id="form_name_input" type="text">
+	<label for="form_name_input">Your name</label>
+	<input required="required" placeholder="Your name" id="form_name_input" type="text">
 </div>
 <div id="form_addr">
-    <label for="form_addr_input">Your e-mail address</label>
-    <input required="required" placeholder="Your e-mail address" id="form_addr_input" type="email">
+	<label for="form_addr_input">Your e-mail address</label>
+	<input required="required" placeholder="Your e-mail address" id="form_addr_input" type="email">
 </div>
 <div id="form_subj">
-    <label for="form_subj_input">Your message's subject</label>
-    <input required="required" placeholder="Your message's subject" id="form_subj_input" type="text">
+	<label for="form_subj_input">Your message's subject</label>
+	<input required="required" placeholder="Your message's subject" id="form_subj_input" type="text">
 </div>
 <div id="form_text">
-    <label for="form_text_textarea">Your message</label>
-    <textarea required="required" placeholder="Your message" id="form_text_textarea"></textarea>
+	<label for="form_text_textarea">Your message</label>
+	<textarea required="required" placeholder="Your message" id="form_text_textarea"></textarea>
 </div>
 <div id="form_subm">
-    <button type="submit" id="form_subm_btn">Send the mail</button>
+	<button type="submit" id="form_subm_btn">Send the mail</button>
 </div>
 ```
 
@@ -197,8 +197,8 @@ Custom fields will be formatted the same way (and with identifiers following the
 in the settings file will result in
 ```html
 <div id="form_budget">
-    <label for="form_budget_input">Maximum budget allowed</label>
-    <input required="required" placeholder="Maximum budget allowed" id="form_budget_input" type="number">
+	<label for="form_budget_input">Maximum budget allowed</label>
+	<input required="required" placeholder="Maximum budget allowed" id="form_budget_input" type="number">
 </div>
 ```
 
