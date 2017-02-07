@@ -88,7 +88,7 @@ function getServer() {
 				return url.match(/^(https?:\/\/[^\/]+)/)[1];
 			}
 		}
-	}	
+	}
 }
 
 
@@ -100,12 +100,12 @@ function generateForm(id) {
 	getLangSync();
 	// Get custom fields if defined in the configuration
 	getCustomFieldsSync();
-	
+
 	var el = document.getElementById(id);
-	
+
 	// Set the form's behaviour
 	el.setAttribute('onsubmit', 'sendForm(); return false;');
-	
+
 	// Add an empty paragraph for status
 	var status = document.createElement('p');
 	status.setAttribute('id', 'form_status');
@@ -138,13 +138,13 @@ function generateForm(id) {
 			required: true
 		})
 	};
-	
+
 	// Adding custom fields
 	for(let fieldName in customFields) {
 		let field = customFields[fieldName];
 		DOMFields[fieldName] = getField(field);
 	}
-	
+
 	// Adding all nodes to document
 	for(let field in DOMFields) {
 		el.appendChild(DOMFields[field]);
@@ -152,7 +152,7 @@ function generateForm(id) {
 
 	// Adding submit button
 	el.appendChild(getSubmitButton('form_subm', lang.form_subm_label));
-	
+
 	// Retrieve the token from the server
 	getToken();
 }
@@ -184,7 +184,7 @@ function getField(fieldInfos) {
 	if(labels) {
 		block.appendChild(getLabel(fieldInfos.label, field.id));
 	}
-	
+
 	// Assemble the block and return it
 	block.appendChild(field);
 	return block;
@@ -197,10 +197,10 @@ function getField(fieldInfos) {
 // return: a label node the field's description
 function getLabel(content, id) {
 	var label = document.createElement('label');
-	
+
 	label.setAttribute('for', id);
 	label.innerHTML = content;
-	
+
 	return label;
 }
 
@@ -219,7 +219,7 @@ function getSelectField(fieldInfos) {
 	field.setAttribute('id', prefix + '_' + fieldInfos.name + '_select');
 
 	let index = 0;
-	
+
 	// Add header option, useful if the field is required
 	let header = document.createElement('option');
 	// The value must be an empty string so the browser can block the submit
@@ -227,7 +227,7 @@ function getSelectField(fieldInfos) {
 	header.setAttribute('value', '');
 	header.innerHTML = lang.form_select_header_option;
 	field.appendChild(header);
-	
+
 	// Add all options to select
 	for(let choice of fieldInfos.options) {
 		let option = document.createElement('option');
@@ -273,13 +273,13 @@ function getTextarea(fieldInfos, required) {
 // return: a HTML element of the given tag with basic info given as input
 function getBaseField(fieldInfos, required, tag) {
 	let field = document.createElement(tag);
-	
+
 	if(fieldInfos.required) {
 		field.setAttribute('required', 'required');
 	}
 	field.setAttribute('placeholder', fieldInfos.label);
 	field.setAttribute('id', prefix + '_' + fieldInfos.name + '_' + tag);
-	
+
 	return field;
 }
 
@@ -290,18 +290,18 @@ function getBaseField(fieldInfos, required, tag) {
 // return: a div node containing the button
 function getSubmitButton(id, text) {
 	var submit = document.createElement('div');
-	
+
 	submit.setAttribute('id', id);
-	
+
 	var button = document.createElement('button');
-	
+
 	button.setAttribute('type', 'submit');
 	button.setAttribute('id', id + '_btn');
-	
+
 	button.innerHTML = text;
-	
+
 	submit.appendChild(button);
-	
+
 	return submit;
 }
 
@@ -313,11 +313,11 @@ function sendForm() {
 	let status = document.getElementById('form_status');
 	status.setAttribute('class', 'sending');
 	status.innerHTML = lang.send_status_progress;
-	
+
 	xhr.send.open('POST', server + '/send');
 	xhr.send.setRequestHeader('Content-Type', 'application/json');
 	xhr.send.send(JSON.stringify(getFormData()));
-	
+
 	// Get a new token
 	getToken();
 }

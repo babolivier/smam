@@ -1,16 +1,16 @@
 html
-    body
-        p.subj
-            span(style="font-weight:bold") Subject:&nbsp;
-            span= subject
-        p.from
-            span(style="font-weight:bold") Sent from:&nbsp;
-            span= replyTo
-        each field in custom
-            p.custom
-                span(style="font-weight:bold")= field.label + ': '
-                span= field.value
-        p.message
-            span(style="font-weight:bold") Message:&nbsp;
-        
-        p= html
+	body
+		p.subj
+			span(style="font-weight:bold") Subject:&nbsp;
+			span= subject
+		p.from
+			span(style="font-weight:bold") Sent from:&nbsp;
+			span= replyTo
+		each field in custom
+			p.custom
+				span(style="font-weight:bold")= field.label + ': '
+				span= field.value
+		p.message
+			span(style="font-weight:bold") Message:&nbsp;
+		
+		p= html

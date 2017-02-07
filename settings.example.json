@@ -1,19 +1,19 @@
 {
-    "mailserver": {
-        "pool": true,
-        "host": "mail.example.tld",
-        "port": 465,
-        "secure": true,
-        "auth": {
-            "user": "noreply@example.tld",
-            "pass": "hackme"
-        }
-    },
-    "recipients": [
-        "you@example.tld",
-        "someone.else@example.com"
-    ],
-    "formOrigin": "https://example.tld",
-    "language": "en",
-    "labels": true
+	"mailserver": {
+		"pool": true,
+		"host": "mail.example.tld",
+		"port": 465,
+		"secure": true,
+		"auth": {
+			"user": "noreply@example.tld",
+			"pass": "hackme"
+		}
+	},
+	"recipients": [
+		"you@example.tld",
+		"someone.else@example.com"
+	],
+	"formOrigin": "https://example.tld",
+	"language": "en",
+	"labels": true
 }

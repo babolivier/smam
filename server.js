@@ -70,24 +70,24 @@ app.get('/register', function(req, res, next) {
 app.post('/send', function(req, res, next) {
 	// Response will be JSON
 	res.header('Access-Control-Allow-Headers', 'Content-Type');
-	
+
 	if(!checkBody(req.body)) {
 		return res.status(400).send();
 	}
-	
+
 	let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-	
+
 	// Token verification
 	if(!checkToken(ip, req.body.token)) {
 		return res.status(403).send();
 	}
-	
+
 	// Count the failures
 	let status = {
 		failed: 0,
 		total: settings.recipients.length
 	};
-	
+
 	// params will be used as:
 	// - values for html generation from the pug template
 	// - parameters for sending the mail(s)
@@ -100,14 +100,14 @@ app.post('/send', function(req, res, next) {
 
 	// Process custom fields to get data we can use in the HTML generation
 	params.custom = processCustom(req.body.custom);
-	
+
 	// Replacing the mail's content with HTML from the pug template
 	// Commenting the line below will bypass the generation and only user the
 	// text entered by the user
 	params.html = pug.renderFile('template.pug', params);
-	
+
 	log.info(lang.log_sending, params.replyTo);
-	
+
 	// Send the email to all users
 	sendMails(params, function(err, infos) {
 		if(err) {
@@ -136,7 +136,7 @@ app.get('/lang', function(req, res, next) {
 	if(settings.labels !== undefined) {
 		labels = settings.labels;
 	}
-	
+
 	// Send the infos
 	res.status(200).send({
 		'labels': labels,
@@ -152,7 +152,7 @@ app.get('/fields', function(req, res, next) {
 
 	// Send an object anyway, its size will determine if we need to display any
 	let customFields = settings.customFields || {};
-	
+
 	// Send custom fields data
 	res.status(200).send(customFields);
 });
@@ -223,7 +223,7 @@ function logStatus(infos) {
 // return: true if the user was registered, false else
 function checkToken(ip, token) {
 	let verified = false;
-	
+
 	// Check if there's at least one token for this IP
 	if(tokens[ip] !== undefined) {
 		if(tokens[ip].length !== 0) {
@@ -239,11 +239,11 @@ function checkToken(ip, token) {
 			}
 		} 
 	}
-	
+
 	if(!verified) {
 		log.warn(ip, lang.log_invalid_token);
 	}
-	
+
 	return verified;
 }
 
@@ -285,7 +285,7 @@ function isInvalid(field) {
 function cleanTokens() {
 	// Get current time for comparison
 	let now = new Date().getTime();
-	
+
 	for(let ip in tokens) { // Check for each IP in the object
 		for(let token of tokens[ip]) { // Check for each token of an IP
 			if(token.expire < now) { // Token has expired
@@ -296,7 +296,7 @@ function cleanTokens() {
 			delete tokens[ip];
 		}
 	}
-	
+
 	log.info(lang.log_cleared_token);
 }
 
@@ -332,6 +332,6 @@ function processCustom(custom) {
 			}
 		}
 	}
-	
+
 	return fields;
 }
