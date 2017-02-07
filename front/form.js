@@ -1,3 +1,13 @@
+/***************************************************************
+*                                                              *
+*                     SMAM: Send Me A Mail                     *
+*                                                              *
+* Made with ♥ by Brendan Abolivier <foss@brendanabolivier.com> *
+* Source code available under GPLv3 license here:              *
+*                       https://github.com/babolivier/smam/    *
+*                                                              *
+***************************************************************/
+
 var prefix = 'form'
 
 var items = {
