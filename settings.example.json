@@ -15,5 +15,22 @@
 	],
 	"formOrigin": "https://example.tld",
 	"language": "en",
-	"labels": true
+	"labels": true,
+	"customFields": {
+	    "deadline": {
+	        "label": "Development deadline",
+	        "type": "select",
+	        "options": [
+	            "A week",
+	            "A month",
+	            "More than a month"
+	        ],
+	        "required": true
+	    },
+	    "budget_max": {
+	        "label": "Maximum budget (€)",
+	        "type": "number",
+	        "required": true
+	    }
+	}
 }
