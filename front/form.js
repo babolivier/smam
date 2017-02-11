@@ -130,12 +130,6 @@ function generateForm(id) {
 			label: lang.form_subj_label,
 			type: 'text',
 			required: true
-		}),
-		text: getField({
-			name: items.text,
-			label: lang.form_mesg_label,
-			type: 'textarea',
-			required: true
 		})
 	};
 
@@ -145,10 +139,19 @@ function generateForm(id) {
 		DOMFields[fieldName] = getField(field);
 	}
 
+	// Add the message's textarea
+	DOMFields[text] = getField({
+		name: items.text,
+		label: lang.form_mesg_label,
+		type: 'textarea',
+		required: true
+	});
+
 	// Adding all nodes to document
 	for(let field in DOMFields) {
 		el.appendChild(DOMFields[field]);
 	}
+
 
 	// Adding submit button
 	el.appendChild(getSubmitButton('form_subm', lang.form_subm_label));

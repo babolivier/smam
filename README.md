@@ -120,7 +120,7 @@ The `customFields` section is optional and describes custom form fields, which a
 
 ## Custom fields
 
-SMAM allows you to add custom fields to your form (in addition to the default ones, which are the sender's name, the sender's e-mail address, the message's subject and the message's content). These fields will be added in your form below the content's field, in a tag defined by the settings file (one of &lt;input&gt;, &lt;select&gt; and &lt;textarea&gt;). We'll see below how to set the field's type.
+SMAM allows you to add custom fields to your form (in addition to the default ones, which are the sender's name, the sender's e-mail address, the message's subject and the message's content). These fields will be added in your form just above the content's field, in a tag defined by the settings file (one of &lt;input&gt;, &lt;select&gt; and &lt;textarea&gt;). We'll see below how to set the field's type.
 
 A custom field is defined in the `customFields` section of your settings file, as described below:
 
