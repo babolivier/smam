@@ -167,7 +167,7 @@ function generateForm(id) {
 // return: a block containing the field and a label describing it (if enabled)
 function getField(fieldInfos) {
 	var block = document.createElement('div');
-	block.setAttribute('id', fieldInfos.name);
+	block.setAttribute('id', 'form_' + fieldInfos.name);
 
 	// Declare the variable first
 	let field = {};
