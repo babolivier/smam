@@ -225,7 +225,13 @@ function getSelectField(fieldInfos) {
 	// The value must be an empty string so the browser can block the submit
 	// event if the field is required
 	header.setAttribute('value', '');
-	header.innerHTML = lang.form_select_header_option;
+	// If the labels are disabled, set the header option's inner text as the
+	// field's label
+    if(labels) {
+		header.innerHTML = lang.form_select_header_option;
+	} else {
+		header.innerHTML = fieldInfos.label;
+	}
 	field.appendChild(header);
 
 	// Add all options to select
@@ -265,7 +271,7 @@ function getTextarea(fieldInfos, required) {
 }
 
 
-// Returns a base HTML element with generic info to be processed by functions at 
+// Returns a base HTML element with generic info to be processed by functions at
 // higher level
 // fieldInfos: object describing the field
 // required: boolean on whether the field is required or optional
