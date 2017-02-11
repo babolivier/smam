@@ -227,7 +227,7 @@ function getSelectField(fieldInfos) {
 	header.setAttribute('value', '');
 	// If the labels are disabled, set the header option's inner text as the
 	// field's label
-    if(labels) {
+	if(labels) {
 		header.innerHTML = lang.form_select_header_option;
 	} else {
 		header.innerHTML = fieldInfos.label;
