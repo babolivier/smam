@@ -140,7 +140,7 @@ function generateForm(id) {
 	}
 
 	// Add the message's textarea
-	DOMFields["text"] = getField({
+	DOMFields['text'] = getField({
 		name: items.text,
 		label: lang.form_mesg_label,
 		type: 'textarea',
