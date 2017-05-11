@@ -85,7 +85,7 @@ function getServer() {
 			// This should be our script
 			if(url.match(/form\.js$/)) {
 				// Port has been found
-				return url.match(/^(https?:\/\/[^\/]+)/)[1];
+				return url.match(/^(https?:\/\/.+)\/form\.js/)[1];
 			}
 		}
 	}
