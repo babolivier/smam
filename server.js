@@ -1,18 +1,18 @@
-var pug			= require('pug');
-var nodemailer  = require('nodemailer');
-var crypto		= require('crypto');
-var fs		= require('fs');
-var settings	= require('./settings');
+var pug = require('pug');
+var nodemailer = require('nodemailer');
+var crypto = require('crypto');
+var fs = require('fs');
+var settings = require('./settings');
 
 // Translation
-var locale		= require('./locales/' + settings.language);
-var lang		= locale.server;
+var locale = require('./locales/' + settings.language);
+var lang = locale.server;
 
 // Web server
-var bodyParser	= require('body-parser');
-var cors		= require('cors');
-var express		= require('express');
-var app			= express();
+var bodyParser = require('body-parser');
+var cors = require('cors');
+var express = require('express');
+var app = express();
 
 // Logging
 var printit = require('printit');
