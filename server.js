@@ -1,6 +1,7 @@
 var pug			= require('pug');
 var nodemailer  = require('nodemailer');
 var crypto		= require('crypto');
+var fs		= require('fs');
 var settings	= require('./settings');
 
 // Translation
@@ -28,6 +29,28 @@ var transporter = nodemailer.createTransport(settings.mailserver);
 // Verification tokens
 var tokens = {};
 
+// Default template
+// JavaScript has no native way to handle multi-line strings, so we put our template
+// in a comment inside a function fro which we generate a string.
+// cf: https://tomasz.janczuk.org/2013/05/multi-line-strings-in-javascript-and.html
+var defaultTemplate = (function() {/*
+html
+	body
+		p.subj
+			span(style="font-weight:bold") Subject:&nbsp;
+			span= subject
+		p.from
+			span(style="font-weight:bold") Sent from:&nbsp;
+			span= replyTo
+		each field in custom
+			p.custom
+				span(style="font-weight:bold")= field.label + ': '
+				span= field.value
+		p.message
+			span(style="font-weight:bold") Message:&nbsp;
+		
+		p= html
+*/}).toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1];
 
 // Serve static (JS + HTML) files
 app.use(express.static('front'));
@@ -104,23 +127,33 @@ app.post('/send', function(req, res, next) {
 	// Replacing the mail's content with HTML from the pug template
 	// Commenting the line below will bypass the generation and only user the
 	// text entered by the user
-	params.html = pug.renderFile('template.pug', params);
-
-	log.info(lang.log_sending, params.replyTo);
-
-	// Send the email to all users
-	sendMails(params, function(err, infos) {
+	fs.access('template.pug', function(err) {
+		// Checking if the template exists.
+		// If not, fallback to the default template.
+		// TODO: Parameterise the template file name.
 		if(err) {
-			log.error(err);
-		}
-		logStatus(infos);
-	}, function() {
-		if(status.failed === status.total) {
-			res.status(500).send();
+			params.html = pug.render(defaultTemplate, params);
 		} else {
-			res.status(200).send();
+			params.html = pug.renderFile('template.pug', params);
 		}
-	})
+
+		log.info(lang.log_sending, params.replyTo);
+
+		// Send the email to all users
+		sendMails(params, function(err, infos) {
+			if(err) {
+				log.error(err);
+			}
+			logStatus(infos);
+		}, function() {
+			if(status.failed === status.total) {
+				res.status(500).send();
+			} else {
+				res.status(200).send();
+			}
+		});
+	});
+
 });
 
 
