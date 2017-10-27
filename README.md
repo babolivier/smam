@@ -145,7 +145,7 @@ A custom field is defined in the `customFields` section of your settings file, a
 
 ## Templating
 
-Each e-mail sent by the form follows a template described in `template.pug` (it's [Pug](pugjs.org/)). If you want to change the way the e-mails you receive are displayed in your mailbox, just edit it! You don't even need to restart the server aftewards :smile:
+Each e-mail sent by the form follows a template described in `template.example.pug` (it's [Pug](pugjs.org/)). If you want to change the way the e-mails you receive are displayed in your mailbox, just edit it! You don't even need to restart the server aftewards :smile:
 
 The template also features custom fields, iterating over the `custom` object, containing the field's label and user-input value:
 
@@ -155,6 +155,8 @@ The template also features custom fields, iterating over the `custom` object, co
 	"value": "Hello"
 }
 ```
+
+The template needs to be named `template.pug`. If no template could be found under this name, SMAM will use a default one, which features both default and custom fields, and should be sufficient for non-advanced usage.
 
 ## Personnalising
 
